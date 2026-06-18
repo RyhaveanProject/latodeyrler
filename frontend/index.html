@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LotoAZ — Premium Loto Oyunu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Particles background -->
+  <div class="particles" id="particles"></div>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-box auth-modal">
+      <div class="modal-logo">🎰 <span>LotoAZ</span></div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Daxil ol</button>
+        <button class="auth-tab" data-tab="register">Qeydiyyat</button>
+      </div>
+
+      <!-- Login Form -->
+      <div class="auth-form active" id="loginForm">
+        <div class="input-group">
+          <label>İstifadəçi adı / Email</label>
+          <input type="text" id="loginUsername" placeholder="istifadəçi adı">
+        </div>
+        <div class="input-group">
+          <label>Şifrə</label>
+          <input type="password" id="loginPassword" placeholder="••••••••">
+        </div>
+        <button class="btn-vip btn-primary" onclick="login()">
+          <span class="btn-glow"></span>
+          Daxil ol
+        </button>
+      </div>
+
+      <!-- Register Form -->
+      <div class="auth-form" id="registerForm">
+        <div class="input-group">
+          <label>İstifadəçi adı</label>
+          <input type="text" id="regUsername" placeholder="unikal_ad">
+        </div>
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="email@example.com">
+        </div>
+        <div class="input-group">
+          <label>Şifrə</label>
+          <input type="password" id="regPassword" placeholder="••••••••">
+        </div>
+        <button class="btn-vip btn-primary" onclick="register()">
+          <span class="btn-glow"></span>
+          Qeydiyyat
+        </button>
+      </div>
+      <div class="auth-error" id="authError"></div>
+    </div>
+  </div>
+
+  <!-- WIN CELEBRATION MODAL -->
+  <div class="modal-overlay hidden" id="winModal">
+    <div class="modal-box win-modal">
+      <div class="win-confetti" id="confetti"></div>
+      <div class="win-icon" id="winIcon">🏆</div>
+      <h2 class="win-title" id="winTitle">QAZANDINIZ!</h2>
+      <div class="win-amount" id="winAmount">+5,000 Coin</div>
+      <div class="win-details" id="winDetails"></div>
+      <button class="btn-vip btn-gold" onclick="closeWinModal()">
+        <span class="btn-glow"></span>
+        Davam et
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div class="app hidden" id="mainApp">
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="nav-logo">🎰 <span>LotoAZ</span></div>
+      <div class="nav-center">
+        <button class="nav-btn active" data-page="home">🏠 Ana Səhifə</button>
+        <button class="nav-btn" data-page="game">🎲 Oyun</button>
+        <button class="nav-btn" data-page="leaderboard">🏆 Liderboard</button>
+        <button class="nav-btn" data-page="history">📋 Tarix</button>
+        <button class="nav-btn" data-page="shop">💎 Mağaza</button>
+      </div>
+      <div class="nav-user">
+        <div class="nav-coins">
+          <span class="coin-icon">🪙</span>
+          <span id="navCoins">0</span>
+        </div>
+        <div class="nav-avatar" id="navAvatar" onclick="showProfileMenu()">🎯</div>
+        <div class="profile-dropdown hidden" id="profileDropdown">
+          <div class="profile-info">
+            <span id="profileUsername">-</span>
+            <span class="vip-badge" id="profileVip">VIP 0</span>
+          </div>
+          <button onclick="showPage('profile')">👤 Profil</button>
+          <button onclick="logout()">🚪 Çıxış</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HOME PAGE -->
+    <div class="page active" id="homePage">
+      <div class="hero">
+        <div class="hero-bg-orbs">
+          <div class="orb orb1"></div>
+          <div class="orb orb2"></div>
+          <div class="orb orb3"></div>
+        </div>
+        <h1 class="hero-title">
+          <span class="gradient-text">BÖYÜK</span> QAZANCLAR
+          <br>SİZİ GÖZLƏYİR
+        </h1>
+        <p class="hero-sub">Azərbaycanın ən premium loto oyunu. Seçin, oynayın, qazanın!</p>
+        <div class="hero-jackpot">
+          <div class="jackpot-label">🔥 CARI JACKPOT</div>
+          <div class="jackpot-amount" id="jackpotAmount">₼ 50,000</div>
+        </div>
+        <div class="hero-btns">
+          <button class="btn-vip btn-hero-main" onclick="showPage('game')">
+            <span class="btn-glow"></span>
+            🎲 İndi Oyna
+          </button>
+          <button class="btn-vip btn-hero-sec" onclick="showPage('leaderboard')">
+            <span class="btn-glow"></span>
+            🏆 Liderboard
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-num" id="statPlayers">0</span>
+          <span class="stat-lbl">Oyunçu</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" id="statGames">0</span>
+          <span class="stat-lbl">Oyun</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" id="statWins">0</span>
+          <span class="stat-lbl">Qazan</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" id="statBigWin">0</span>
+          <span class="stat-lbl">Ən Böyük Qazan</span>
+        </div>
+      </div>
+
+      <!-- Recent Wins Ticker -->
+      <div class="wins-ticker">
+        <span class="ticker-label">🔴 CANLI</span>
+        <div class="ticker-track" id="tickerTrack">
+          <span>Yüklənir...</span>
+        </div>
+      </div>
+
+      <!-- Game Type Cards -->
+      <div class="section-title">🎮 Oyun Növləri</div>
+      <div class="game-cards">
+        <div class="game-card" onclick="selectGameType('classic')">
+          <div class="card-glow classic-glow"></div>
+          <div class="card-icon">🎯</div>
+          <h3>Klassik Loto</h3>
+          <p>6/49 | 50 Coin</p>
+          <div class="card-prize">Max: 10,000 🪙</div>
+          <button class="btn-vip btn-card">
+            <span class="btn-glow"></span>Oyna
+          </button>
+        </div>
+        <div class="game-card featured" onclick="selectGameType('speed')">
+          <div class="card-glow speed-glow"></div>
+          <div class="card-badge">⚡ SÜRƏTLİ</div>
+          <div class="card-icon">⚡</div>
+          <h3>Sürət Loto</h3>
+          <p>5/36 | 30 Coin</p>
+          <div class="card-prize">Max: 5,000 🪙</div>
+          <button class="btn-vip btn-card">
+            <span class="btn-glow"></span>Oyna
+          </button>
+        </div>
+        <div class="game-card mega" onclick="selectGameType('mega')">
+          <div class="card-glow mega-glow"></div>
+          <div class="card-badge">👑 MEGA</div>
+          <div class="card-icon">👑</div>
+          <h3>Mega Loto</h3>
+          <p>7/70 | 100 Coin</p>
+          <div class="card-prize">Max: 50,000 🪙</div>
+          <button class="btn-vip btn-card">
+            <span class="btn-glow"></span>Oyna
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAME PAGE -->
+    <div class="page hidden" id="gamePage">
+      <div class="game-container">
+        <div class="game-header">
+          <h2 class="page-title">🎲 Loto Oyunu</h2>
+          <div class="game-type-selector">
+            <button class="type-btn active" data-type="classic" onclick="setGameType('classic')">🎯 Klassik</button>
+            <button class="type-btn" data-type="speed" onclick="setGameType('speed')">⚡ Sürət</button>
+            <button class="type-btn" data-type="mega" onclick="setGameType('mega')">👑 Mega</button>
+          </div>
+        </div>
+
+        <div class="game-info-bar">
+          <span>Seçilmiş: <strong id="selectedCount">0</strong> / <strong id="requiredCount">6</strong></span>
+          <span>Bilet: <strong id="ticketCost">50</strong> 🪙</span>
+          <span>Balans: <strong id="gameBalance">0</strong> 🪙</span>
+        </div>
+
+        <!-- Number Grid -->
+        <div class="number-grid" id="numberGrid"></div>
+
+        <!-- Action Buttons -->
+        <div class="game-actions">
+          <button class="btn-vip btn-action btn-auto" onclick="autoSelect()">
+            <span class="btn-glow"></span>
+            🎲 Avtomatik Seç
+          </button>
+          <button class="btn-vip btn-action btn-clear" onclick="clearSelection()">
+            <span class="btn-glow"></span>
+            🗑️ Təmizlə
+          </button>
+          <button class="btn-vip btn-action btn-play" onclick="playGame()" id="playBtn">
+            <span class="btn-glow"></span>
+            🎰 Oyna!
+          </button>
+        </div>
+
+        <!-- Result Area -->
+        <div class="result-area hidden" id="resultArea">
+          <div class="result-title" id="resultTitle">Nəticə</div>
+          <div class="result-numbers-row">
+            <div class="result-col">
+              <div class="result-label">Sizin nömrələr</div>
+              <div class="result-nums" id="yourNums"></div>
+            </div>
+            <div class="result-col">
+              <div class="result-label">Çəkilən nömrələr</div>
+              <div class="result-nums" id="drawnNums"></div>
+            </div>
+          </div>
+          <div class="result-match" id="resultMatch"></div>
+        </div>
+
+        <!-- Prize Table -->
+        <div class="prize-table">
+          <h3>🏆 Mükafat Cədvəli</h3>
+          <div class="prize-rows" id="prizeRows"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD PAGE -->
+    <div class="page hidden" id="leaderboardPage">
+      <h2 class="page-title">🏆 Liderboard</h2>
+      <div class="lb-tabs">
+        <button class="lb-tab active" onclick="showLbTab('top')">💰 Top Oyunçular</button>
+        <button class="lb-tab" onclick="showLbTab('wins')">🎉 Son Qazanclar</button>
+      </div>
+      <div id="lbTop" class="lb-content active">
+        <div class="lb-list" id="topList">Yüklənir...</div>
+      </div>
+      <div id="lbWins" class="lb-content hidden">
+        <div class="lb-list" id="winsList">Yüklənir...</div>
+      </div>
+    </div>
+
+    <!-- HISTORY PAGE -->
+    <div class="page hidden" id="historyPage">
+      <h2 class="page-title">📋 Oyun Tarixi</h2>
+      <div class="history-list" id="historyList">Yüklənir...</div>
+    </div>
+
+    <!-- SHOP PAGE -->
+    <div class="page hidden" id="shopPage">
+      <h2 class="page-title">💎 Coin Mağazası</h2>
+      <p class="shop-sub">Daha çox oyna, daha çox qazan!</p>
+      <div class="shop-grid">
+        <div class="shop-card">
+          <div class="shop-glow"></div>
+          <div class="shop-icon">🥉</div>
+          <h3>Starter</h3>
+          <div class="shop-coins">1,000 🪙</div>
+          <div class="shop-price">Pulsuz Test</div>
+          <button class="btn-vip btn-shop" onclick="buyCoins('starter')">
+            <span class="btn-glow"></span>
+            Al
+          </button>
+        </div>
+        <div class="shop-card popular">
+          <div class="shop-glow"></div>
+          <div class="shop-badge">⭐ POPULYAR</div>
+          <div class="shop-icon">🥈</div>
+          <h3>Populyar</h3>
+          <div class="shop-coins">5,000 🪙</div>
+          <div class="shop-price">Pulsuz Test</div>
+          <button class="btn-vip btn-shop btn-gold" onclick="buyCoins('popular')">
+            <span class="btn-glow"></span>
+            Al
+          </button>
+        </div>
+        <div class="shop-card">
+          <div class="shop-glow"></div>
+          <div class="shop-icon">🥇</div>
+          <h3>Premium</h3>
+          <div class="shop-coins">15,000 🪙</div>
+          <div class="shop-price">Pulsuz Test</div>
+          <button class="btn-vip btn-shop" onclick="buyCoins('premium')">
+            <span class="btn-glow"></span>
+            Al
+          </button>
+        </div>
+        <div class="shop-card vip-card">
+          <div class="shop-glow vip-glow"></div>
+          <div class="shop-badge gold-badge">👑 VIP</div>
+          <div class="shop-icon">💎</div>
+          <h3>VIP Mega</h3>
+          <div class="shop-coins">50,000 🪙</div>
+          <div class="shop-price">Pulsuz Test</div>
+          <button class="btn-vip btn-shop btn-platinum" onclick="buyCoins('vip')">
+            <span class="btn-glow"></span>
+            👑 Al
+          </button>
+        </div>
+      </div>
+
+      <!-- Daily Bonus -->
+      <div class="daily-bonus-card">
+        <div class="daily-icon">🎁</div>
+        <div class="daily-text">
+          <h3>Gündəlik Bonus</h3>
+          <p>Hər gün 500 coin pulsuz al!</p>
+        </div>
+        <button class="btn-vip btn-bonus" onclick="claimDailyBonus()" id="bonusBtn">
+          <span class="btn-glow"></span>
+          🎁 Al
+        </button>
+      </div>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div class="page hidden" id="profilePage">
+      <h2 class="page-title">👤 Profil</h2>
+      <div class="profile-card">
+        <div class="profile-avatar-big" id="profileAvatarBig">🎯</div>
+        <h3 id="profileName">-</h3>
+        <div class="vip-level-badge" id="profileVipBadge">VIP 0</div>
+        <div class="profile-stats">
+          <div class="pstat">
+            <span id="pCoins">0</span>
+            <label>🪙 Coin</label>
+          </div>
+          <div class="pstat">
+            <span id="pGames">0</span>
+            <label>🎲 Oyun</label>
+          </div>
+          <div class="pstat">
+            <span id="pWins">0</span>
+            <label>🏆 Qazan</label>
+          </div>
+          <div class="pstat">
+            <span id="pBigWin">0</span>
+            <label>💎 Ən Böyük</label>
+          </div>
+        </div>
+      </div>
+      <div class="avatar-picker">
+        <h3>Avatar Seç</h3>
+        <div class="avatar-grid" id="avatarGrid"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
