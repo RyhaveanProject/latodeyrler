@@ -1,0 +1,7 @@
+# Cloudflare Pages _redirects file
+# API istəklərini Render backend-ə yönləndirir
+
+/api/* https://your-loto-backend.onrender.com/api/:splat 200
+
+# SPA fallback
+/* /index.html 200
