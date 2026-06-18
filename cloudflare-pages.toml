@@ -1,0 +1,9 @@
+# Cloudflare Pages - wrangler.toml
+# Bu fayl Cloudflare Pages üçün konfiqurasiyadır
+
+name = "loto"
+compatibility_date = "2024-01-01"
+
+[build]
+  command = "echo 'Static site - no build needed'"
+  output = "frontend"
